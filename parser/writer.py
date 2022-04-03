@@ -1,17 +1,22 @@
 import psycopg2
 import csv
+import sys
 
 
 # get info from db and write it to a file
 def select():
     # connect to db and get data
-    conn = psycopg2.connect(
-        dbname='task', user='postgres', password='drder32167', host='localhost'
-    )
+    try:
+        conn = psycopg2.connect(
+            dbname='task', user='postgres', password='drder32167', host='localhost'
+        )
+    except psycopg2.OperationalError as er:
+        print(er)
+        sys.exit(1)
 
     cursor = conn.cursor()
 
-    query = 'SELECT * FROM users INNER JOIN cars ON car_id = users.user_id ORDER BY price NULLS FIRST'
+    query = 'SELECT * FROM users INNER JOIN offers ON offer_id = users.user_id ORDER BY price NULLS FIRST'
 
     cursor.execute(query)
 
